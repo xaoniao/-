@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}社团管理 - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ club.name }} 管理后台</h2>
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-secondary">退出登录</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-primary">{{ stats.total }}</div>
+                    <small class="text-muted">总报名人数</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-warning">{{ stats.pending }}</div>
+                    <small class="text-muted">待审核</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-success">{{ stats.accepted }}</div>
+                    <small class="text-muted">已录取</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="display-4 text-danger">{{ stats.rejected }}</div>
+                    <small class="text-muted">已拒绝</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">最近报名</h5>
+            <a href="{{ url_for('admin_applicants') }}" class="btn btn-sm btn-outline-primary">查看全部</a>
+        </div>
+        <div class="card-body">
+            {% if applications %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>专业</th>
+                            <th>报名时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications[:10] %}
+                        <tr>
+                            <td>{{ app.student.name }}</td>
+                            <td>{{ app.student.major or '-' }}</td>
+                            <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if app.status == 'pending' %}
+                                <span class="status-badge status-pending">待审核</span>
+                                {% elif app.status == 'accepted' %}
+                                <span class="status-badge status-accepted">已录取</span>
+                                {% elif app.status == 'rejected' %}
+                                <span class="status-badge status-rejected">已拒绝</span>
+                                {% elif app.status == 'interview' %}
+                                <span class="status-badge status-interview">面试中</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <form method="POST" action="{{ url_for('update_application_status', app_id=app.id) }}" style="display:inline">
+                                        <input type="hidden" name="status" value="accepted">
+                                        <button type="submit" class="btn btn-outline-success">录取</button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('update_application_status', app_id=app.id) }}" style="display:inline">
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="btn btn-outline-danger">拒绝</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center text-muted py-4">暂无报名记录</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

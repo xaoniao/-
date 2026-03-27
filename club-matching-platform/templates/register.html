@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}完善信息 - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h2 class="text-center mb-4">📝 完善个人信息</h2>
+
+            {% if session.get('survey_tags') %}
+            <div class="text-center mb-4">
+                <p class="text-muted">您的兴趣标签：</p>
+                <div>
+                    {% for tag in session.get('survey_tags', []) %}
+                    <span class="tag tag-primary">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">学号 *</label>
+                    <input type="text" class="form-control" name="student_id" required placeholder="如：2024001001">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">姓名 *</label>
+                    <input type="text" class="form-control" name="name" required placeholder="请输入您的姓名">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">专业</label>
+                    <select class="form-select" name="major">
+                        <option value="">请选择专业</option>
+                        <option value="计算机">计算机科学与技术</option>
+                        <option value="软件">软件工程</option>
+                        <option value="电子">电子信息</option>
+                        <option value="金融">金融学</option>
+                        <option value="管理">工商管理</option>
+                        <option value="外语">外国语言文学</option>
+                        <option value="数学">数学</option>
+                        <option value="物理">物理学</option>
+                        <option value="化学">化学</option>
+                        <option value="生物">生物学</option>
+                        <option value="其他">其他专业</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">年级</label>
+                    <select class="form-select" name="grade">
+                        <option value="2024">2024级（大一）</option>
+                        <option value="2023">2023级（大二）</option>
+                        <option value="2022">2022级（大三）</option>
+                        <option value="2021">2021级（大四）</option>
+                    </select>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">提交并查看推荐</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

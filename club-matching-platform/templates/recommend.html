@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}智能推荐 - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2>🎯 为您推荐的社团</h2>
+        <p class="text-muted">基于您的兴趣测评结果，为您智能匹配以下社团</p>
+        <div class="mt-2">
+            <span class="text-muted">您的标签：</span>
+            {% for tag in student.tags.split(',') %}
+            <span class="tag tag-primary">{{ tag }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if recommendations %}
+    <div class="row g-4">
+        {% for club, score, reasons in recommendations %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card club-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ club.name }}</h5>
+                        <span class="match-score">{{ score }}%</span>
+                    </div>
+                    <p class="text-muted small mb-2">{{ club.category }}</p>
+                    <p class="card-text small">{{ club.description[:60] }}...</p>
+
+                    <div class="mb-2">
+                        {% for tag in club.tags.split(',')[:3] %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-success">
+                            💡 {% for reason in reasons %}{{ reason }}{% if not loop.last %}、{% endif %}{% endfor %}
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('club_detail', club_id=club.id) }}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                        <a href="{{ url_for('apply', club_id=club.id) }}" class="btn btn-primary btn-sm">立即报名</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted">暂无推荐的社团，请稍后再试</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('club_list') }}" class="btn btn-outline-primary">浏览全部社团</a>
+    </div>
+</div>
+{% endblock %}

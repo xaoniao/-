@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}报名管理 - {{ applications[0].club.name if applications else '社团管理' }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>报名管理</h2>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary me-2">返回仪表盘</a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-secondary">退出登录</a>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="btn-group">
+            <a href="{{ url_for('admin_applicants') }}" class="btn {% if not status_filter %}btn-primary{% else %}btn-outline-primary{% endif %}">全部</a>
+            <a href="{{ url_for('admin_applicants', status='pending') }}" class="btn {% if status_filter == 'pending' %}btn-primary{% else %}btn-outline-primary{% endif %}">待审核</a>
+            <a href="{{ url_for('admin_applicants', status='accepted') }}" class="btn {% if status_filter == 'accepted' %}btn-primary{% else %}btn-outline-primary{% endif %}">已录取</a>
+            <a href="{{ url_for('admin_applicants', status='rejected') }}" class="btn {% if status_filter == 'rejected' %}btn-primary{% else %}btn-outline-primary{% endif %}">已拒绝</a>
+        </div>
+    </div>
+
+    {% if applications %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>专业</th>
+                    <th>兴趣标签</th>
+                    <th>自我介绍</th>
+                    <th>报名时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td><strong>{{ app.student.name }}</strong></td>
+                    <td>{{ app.student.student_id }}</td>
+                    <td>{{ app.student.major or '-' }}</td>
+                    <td>
+                        {% for tag in app.student.tags.split(',')[:2] %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <span class="d-inline-block text-truncate" style="max-width: 150px;" title="{{ app.self_intro }}">
+                            {{ app.self_intro or '-' }}
+                        </span>
+                    </td>
+                    <td>{{ app.created_at.strftime('%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if app.status == 'pending' %}
+                        <span class="status-badge status-pending">待审核</span>
+                        {% elif app.status == 'accepted' %}
+                        <span class="status-badge status-accepted">已录取</span>
+                        {% elif app.status == 'rejected' %}
+                        <span class="status-badge status-rejected">已拒绝</span>
+                        {% elif app.status == 'interview' %}
+                        <span class="status-badge status-interview">面试中</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if app.status == 'pending' %}
+                        <div class="btn-group btn-group-sm">
+                            <form method="POST" action="{{ url_for('update_application_status', app_id=app.id) }}" style="display:inline">
+                                <input type="hidden" name="status" value="accepted">
+                                <button type="submit" class="btn btn-outline-success">录取</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('update_application_status', app_id=app.id) }}" style="display:inline">
+                                <input type="hidden" name="status" value="rejected">
+                                <button type="submit" class="btn btn-outline-danger">拒绝</button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <small class="text-muted">已处理</small>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted">暂无报名记录</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}社团列表 - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">🏫 社团列表</h2>
+
+    <div class="mb-4">
+        <div class="btn-group">
+            <a href="{{ url_for('club_list') }}" class="btn {% if not current_category %}btn-primary{% else %}btn-outline-primary{% endif %}">全部</a>
+            <a href="{{ url_for('club_list', category='文艺') }}" class="btn {% if current_category == '文艺' %}btn-primary{% else %}btn-outline-primary{% endif %}">文艺</a>
+            <a href="{{ url_for('club_list', category='体育') }}" class="btn {% if current_category == '体育' %}btn-primary{% else %}btn-outline-primary{% endif %}">体育</a>
+            <a href="{{ url_for('club_list', category='学术') }}" class="btn {% if current_category == '学术' %}btn-primary{% else %}btn-outline-primary{% endif %}">学术</a>
+            <a href="{{ url_for('club_list', category='公益') }}" class="btn {% if current_category == '公益' %}btn-primary{% else %}btn-outline-primary{% endif %}">公益</a>
+            <a href="{{ url_for('club_list', category='技术') }}" class="btn {% if current_category == '技术' %}btn-primary{% else %}btn-outline-primary{% endif %}">技术</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for club in clubs %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card club-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ club.name }}</h5>
+                    <p class="text-muted small mb-2">{{ club.category }}</p>
+                    <p class="card-text small">{{ club.description[:60] }}...</p>
+
+                    <div class="mb-3">
+                        {% for tag in club.tags.split(',')[:3] %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <a href="{{ url_for('club_detail', club_id=club.id) }}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">暂无社团</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

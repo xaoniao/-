@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}兴趣测评 - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h2 class="text-center mb-4">🎯 兴趣测评</h2>
+            <p class="text-center text-muted mb-4">通过以下问题，我们会为您生成个性化的社团推荐</p>
+
+            <form method="POST" id="surveyForm">
+                <h5 class="mb-3">一、兴趣倾向评分（1-100分）</h5>
+
+                <div class="mb-4">
+                    <label class="form-label">🎨 文艺类兴趣（音乐、舞蹈、话剧、摄影等）</label>
+                    <input type="range" class="form-range" name="arts_score" min="0" max="100" value="50" id="arts_score">
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>不感兴趣</span>
+                        <span id="arts_value">50</span>
+                        <span>非常感兴趣</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">⚽ 体育类兴趣（篮球、足球、跑步等）</label>
+                    <input type="range" class="form-range" name="sports_score" min="0" max="100" value="50" id="sports_score">
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>不感兴趣</span>
+                        <span id="sports_value">50</span>
+                        <span>非常感兴趣</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">📚 学术类兴趣（科研、辩论、英语等）</label>
+                    <input type="range" class="form-range" name="academic_score" min="0" max="100" value="50" id="academic_score">
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>不感兴趣</span>
+                        <span id="academic_value">50</span>
+                        <span>非常感兴趣</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">❤️ 公益类兴趣（志愿者、环保等）</label>
+                    <input type="range" class="form-range" name="charity_score" min="0" max="100" value="50" id="charity_score">
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>不感兴趣</span>
+                        <span id="charity_value">50</span>
+                        <span>非常感兴趣</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">💻 技术类兴趣（编程、机器人、创业等）</label>
+                    <input type="range" class="form-range" name="tech_score" min="0" max="100" value="50" id="tech_score">
+                    <div class="d-flex justify-content-between text-muted">
+                        <span>不感兴趣</span>
+                        <span id="tech_value">50</span>
+                        <span>非常感兴趣</span>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">二、可参与活动的时间</h5>
+                <p class="text-muted small">勾选您通常有空的时间段</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>上午</th>
+                                <th>下午</th>
+                                <th>晚上</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set days = [('周一', 'mon'), ('周二', 'tue'), ('周三', 'wed'), ('周四', 'thu'), ('周五', 'fri'), ('周六', 'sat'), ('周日', 'sun')] %}
+                            {% for day_name, day_code in days %}
+                            <tr>
+                                <td><strong>{{ day_name }}</strong></td>
+                                <td>
+                                    <input type="checkbox" name="time_{{ day_code }}" value="morning" class="form-check-input">
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="time_{{ day_code }}" value="afternoon" class="form-check-input">
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="time_{{ day_code }}" value="evening" class="form-check-input">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">完成测评，查看推荐</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 更新滑块数值显示
+    const sliders = ['arts', 'sports', 'academic', 'charity', 'tech'];
+    sliders.forEach(name => {
+        const slider = document.getElementById(`${name}_score`);
+        const display = document.getElementById(`${name}_value`);
+        slider.addEventListener('input', function() {
+            display.textContent = this.value;
+        });
+    });
+</script>
+{% endblock %}

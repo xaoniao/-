@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}报名 {{ club.name }} - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h2 class="mb-4">📝 报名 {{ club.name }}</h2>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>{{ club.name }}</h5>
+                    <p class="text-muted mb-0">{{ club.category }}</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                <div class="mb-4">
+                    <label class="form-label">您的姓名</label>
+                    <input type="text" class="form-control" value="{{ student.name }}" disabled>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">您的专业</label>
+                    <input type="text" class="form-control" value="{{ student.major or '未填写' }}" disabled>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">自我介绍</label>
+                    <textarea class="form-control" name="self_intro" rows="4" placeholder="请简单介绍一下自己，包括兴趣爱好、相关经历等（选填）"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">为什么想加入这个社团？</label>
+                    <textarea class="form-control" name="motivation" rows="3" placeholder="请说明您的加入动机（选填）"></textarea>
+                </div>
+
+                <div class="alert alert-info small">
+                    💡 提示：报名后可在"我的报名"中查看审核状态，请留意社团通知
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('club_detail', club_id=club.id) }}" class="btn btn-outline-secondary">返回</a>
+                    <button type="submit" class="btn btn-primary flex-grow-1">提交报名</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

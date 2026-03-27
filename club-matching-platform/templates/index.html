@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}社团通 - 发现你的社团归属{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <h1>🎯 一键发现你的社团归属</h1>
+        <p>智能匹配 · 一键报名 · 告别信息不对称</p>
+        <div class="mt-4">
+            <a href="{{ url_for('survey') }}" class="btn btn-light btn-lg me-2">开始兴趣测评</a>
+            <a href="{{ url_for('club_list') }}" class="btn btn-outline-light btn-lg">浏览社团</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h3 class="text-center mb-4">🔥 热门招新社团</h3>
+    <div class="row g-4">
+        {% for club in clubs %}
+        <div class="col-md-4">
+            <div class="card club-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ club.name }}</h5>
+                    <p class="text-muted mb-2">{{ club.category }}</p>
+                    <p class="card-text">{{ club.description[:50] }}...</p>
+                    <div class="mb-3">
+                        {% for tag in club.tags.split(',')[:3] %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('club_detail', club_id=club.id) }}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('club_list') }}" class="btn btn-primary">查看全部社团</a>
+    </div>
+
+    <hr class="my-5">
+
+    <h3 class="text-center mb-4">💡 使用流程</h3>
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="display-4 mb-3">📝</div>
+            <h5>完成测评</h5>
+            <p class="text-muted">10道趣味问题，生成兴趣画像</p>
+        </div>
+        <div class="col-md-3">
+            <div class="display-4 mb-3">🎯</div>
+            <h5>智能匹配</h5>
+            <p class="text-muted">AI算法推荐最适合你的社团</p>
+        </div>
+        <div class="col-md-3">
+            <div class="display-4 mb-3">📨</div>
+            <h5>一键报名</h5>
+            <p class="text-muted">填写一次，批量报名多个社团</p>
+        </div>
+        <div class="col-md-3">
+            <div class="display-4 mb-3">🎉</div>
+            <h5>加入社团</h5>
+            <p class="text-muted">等待审核，开启社团生活</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}我的报名 - 社团通{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">📋 我的报名</h2>
+
+    {% if applications %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>社团名称</th>
+                    <th>类别</th>
+                    <th>报名时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td><strong>{{ app.club.name }}</strong></td>
+                    <td>{{ app.club.category }}</td>
+                    <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {% if app.status == 'pending' %}
+                        <span class="status-badge status-pending">待审核</span>
+                        {% elif app.status == 'accepted' %}
+                        <span class="status-badge status-accepted">已录取</span>
+                        {% elif app.status == 'rejected' %}
+                        <span class="status-badge status-rejected">未通过</span>
+                        {% elif app.status == 'interview' %}
+                        <span class="status-badge status-interview">面试中</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('club_detail', club_id=app.club.id) }}" class="btn btn-sm btn-outline-primary">查看社团</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted">您还没有报名任何社团</p>
+        <a href="{{ url_for('club_list') }}" class="btn btn-primary">浏览社团</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
